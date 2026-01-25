@@ -23,8 +23,8 @@ IF OBJECT_ID ('bronze.olist_order_items', 'U') IS NOT NULL
 CREATE TABLE bronze.olist_order_items(
 	order_id NVARCHAR(250),
 	order_item_id	INT,
-	product_id	INT,
-	seller_id INT,
+	product_id	NVARCHAR(250),
+	seller_id NVARCHAR(250),
 	shipping_limit_date DATETIME,
 	price DECIMAL(19, 4),
 	freight_value DECIMAL(19, 4)
@@ -45,11 +45,11 @@ IF OBJECT_ID ('bronze.olist_order_reviews', 'U') IS NOT NULL
 CREATE TABLE bronze.olist_order_reviews(
 	review_id NVARCHAR(250),
 	order_id NVARCHAR(250),
-	review_score	INT,
-	review_comment_title	NVARCHAR(250),
-	review_comment_message NVARCHAR(250),
-	review_creation_date DATETIME,
-	review_answer_timestamp DATETIME
+	review_score	NVARCHAR(250),
+	review_comment_title	NVARCHAR(MAX),
+	review_comment_message NVARCHAR(MAX),
+	review_creation_date NVARCHAR(255),
+	review_answer_timestamp NVARCHAR(255)
 );			
 
 IF OBJECT_ID ('bronze.olist_orders', 'U') IS NOT NULL
@@ -75,7 +75,7 @@ CREATE TABLE bronze.olist_products(
 	product_photos_qty INT,
 	product_weight_g INT,
 	product_length_cm INT,
-	product_height_cm INT,
+	product_height_cm NVARCHAR(250),
 );	
 
 IF OBJECT_ID ('bronze.sellers', 'U') IS NOT NULL
@@ -95,4 +95,6 @@ CREATE TABLE bronze.product_name_translation(
 	product_category_name_english NVARCHAR(250)
 	
 );
+
+
 	
