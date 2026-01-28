@@ -90,7 +90,7 @@ BEGIN
 		SET @start_time = GETDATE();
 		PRINT '>> Truncating Data: silver.[olist_geolocation]';
 		TRUNCATE TABLE silver.[olist_geolocation];
-		PRINT '>> Inserting Data into: silver.olist_products';
+		PRINT '>> Inserting Data into: silver.olist_geolocation';
 		INSERT INTO silver.[olist_geolocation] (
 			[geolocation_zip_code_prefix]
 			  ,[geolocation_lat]
@@ -109,6 +109,21 @@ BEGIN
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
 		PRINT'>> ----------------------';
 
+		SET @start_time = GETDATE();
+		PRINT '>> Truncating Data: silver.[product_name_translation]';
+		TRUNCATE TABLE silver.[product_name_translation];
+		PRINT '>> Inserting Data into: silver.[product_name_translation]';
+		INSERT INTO silver.[product_name_translation] (
+			[product_category_name]
+			,[product_category_name_english]
+		)
+		SELECT
+			TRIM([product_category_name]) product_category_name
+			,TRIM([product_category_name_english]) product_category_name_english
+		FROM [DataWarehouse].[bronze].[product_name_translation]
+		SET @end_time = GETDATE();
+		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+		PRINT'>> ----------------------';
 
 		-- order item
 		SET @start_time = GETDATE();
@@ -132,6 +147,26 @@ BEGIN
 			  ,[price]
 			  ,[freight_value]
 		FROM [DataWarehouse].[bronze].[olist_order_items]
+		SET @end_time = GETDATE();
+		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
+		PRINT'>> ----------------------';
+
+		-- sellers
+		SET @start_time = GETDATE();
+		PRINT '>> Truncating Data: silver.sellers';
+		TRUNCATE TABLE silver.sellers;
+		PRINT '>> Inserting Data into: silver.sellers';
+		INSERT INTO silver.sellers (
+			   [seller_id]
+			  ,[seller_zip_code_prefix]
+			  ,[seller_city]
+			  ,[seller_state]
+		)
+		SELECT [seller_id]
+			  ,[seller_zip_code_prefix]
+			  ,[seller_city]
+			  ,[seller_state]
+		FROM [DataWarehouse].[bronze].[sellers]
 		SET @end_time = GETDATE();
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
 		PRINT'>> ----------------------';
@@ -201,6 +236,13 @@ BEGIN
 		SET @end_time = GETDATE();
 		PRINT '>> Load Duration: ' + CAST(DATEDIFF(second, @start_time, @end_time) AS NVARCHAR) + ' seconds';
 		PRINT'>> ----------------------';
+
+		SET @batch_end_time = GETDATE();
+		PRINT '====================================='
+		PRINT 'Loading Silver Layer is Completed';
+		PRINT '<< -- Total Load Duration: ' + CAST(DATEDIFF(second, @batch_start_time, @batch_end_time) AS NVARCHAR) + ' seconds';
+		PRINT '=======================================';
+
 	END TRY
 	BEGIN CATCH
 		PRINT '========================================='
