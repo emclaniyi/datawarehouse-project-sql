@@ -58,6 +58,7 @@ This layer follows a dimensional modeling approach, consisting of a central **Fa
 | Column | Data Type | Source Table | Description |
 | :--- | :--- | :--- | :--- |
 | **customer_unique_id** | NVARCHAR | `silver.olist_customers` | Primary Key (Actual Person ID). |
+| **customer_id** | NVARCHAR | `silver.olist_customers` | Foreign Key transaction ID). |
 | **customer_zip_code_prefix** | NVARCHAR | `silver.olist_customers` | Cleaned and standardized zip code. |
 | **customer_city** | NVARCHAR | `silver.olist_customers` | Cleaned and standardized city name. |
 | **customer_state** | NVARCHAR | `silver.olist_customers` | State abbreviation (e.g., SP, RJ). |

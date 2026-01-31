@@ -48,6 +48,7 @@ GO
 -- customers
 CREATE VIEW gold.dim_customers AS
 SELECT 
+	  customer_id,
       [customer_unique_id],
       [customer_zip_code_prefix],
       [customer_city],
@@ -87,4 +88,21 @@ SELECT
 FROM [DataWarehouse].[silver].[olist_products] p
 LEFT JOIN [DataWarehouse].[silver].[product_name_translation] pt
 ON p.product_category_name = pt.product_category_name
+GO
+
+-- =============================================================================
+-- Create Dimension: gold.dim_dates
+-- =============================================================================
+IF OBJECT_ID('gold.dim_dates', 'V') IS NOT NULL
+	DROP VIEW gold.dim_dates;
+GO
+CREATE VIEW gold.dim_dates AS
+SELECT 
+	date_key,
+	full_date,
+	[year],
+	month_name,
+	is_weekend
+	
+FROM silver.dim_date
 GO
